@@ -25,3 +25,7 @@ Câu 4: Expectimax
 ![Cau4](https://user-images.githubusercontent.com/71663050/96190903-316cd500-0f6d-11eb-998f-8074e96ecc54.PNG)
 
 - Cài đặt cơ bản giống với minimax nhưng thêm yếu tố xác suất để đưa ra quyết định tối ưu
+
+# Quá trình chạy autograder:
+
+![Cau1](https://user-images.githubusercontent.com/71663050/96330478-bba55e00-107f-11eb-83fe-f39432daf2cd.PNG) ![Cau2](https://user-images.githubusercontent.com/71663050/96330486-c3650280-107f-11eb-9b39-d92c12ac664f.PNG) ![Cau3](https://user-images.githubusercontent.com/71663050/96330498-d5df3c00-107f-11eb-9f99-c35a829154ce.PNG) ![Cau4](https://user-images.githubusercontent.com/71663050/96330502-dc6db380-107f-11eb-934a-7b1f2fe63eca.PNG) ![Auto](https://user-images.githubusercontent.com/71663050/96330510-e98aa280-107f-11eb-8899-dec21dba1cb7.PNG)
