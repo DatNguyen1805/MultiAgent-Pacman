@@ -74,28 +74,42 @@ class ReflexAgent(Agent):
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "*** YOUR CODE HERE ***"
+        #Nhận và lưu thông tin vị trí hiện tại của Pacman
         currentPos = currentGameState.getPacmanPosition()
+        #Nhận và lưu thông tin vị trí thức ăn
         currentFood = currentGameState.getFood()
+        #Lấy thông tin tường và lưu nó để lấy chiều cao, chiều rộng của bản đồ
         layout = currentGameState.getWalls()
+        #Nếu pacman và hồn ma hoặc thức ăn ở xa nhất thì nó ở hai đầu đường chéo của map, Nên thêm maxlength lấy chiều cao và rộng của bản đồ
         maxlength = layout.height - 2 + layout.width - 2
+        #Khai báo điểm ban đầu bằng 0
         score = 0
-
+     
+        #Kiểm tra xem vị trí tiếp theo của Pacman có khớp với vị trí một trong các thức ăn hiện tại hay không
         if currentFood[newPos[0]][newPos[1]]:
           score += 10
         
+        #Khai báo giá trị vô hạn cho khoảng cách giữa thức ăn và pacman
         newFoodDistance = float("inf")
+        #Thực hiện vòng lặp cho từng thức ăn ở trạng thái tiếp theo
         for food in newFood.asList():
+            #Tính khoảng cách Mathatan giữa vị trí pacman và thức ăn
           foodDistance = manhattanDistance(newPos, food)
+            #Sử dụng min để tìm vị trí nhỏ nhất giữa thức ăn và pacman
           newFoodDistance = min([newFoodDistance, foodDistance])
-
+        #Khai báo giá trị vô hạn cho khoảng cách giữa pacman và ghost
         newGhostDistance = float("inf")
+        #Thực hiện vòng lặp qua từng con ma trong trạng thái tiếp theo
         for ghost in successorGameState.getGhostPositions():
+            #Tính khoảng cách giữa ma và pacman bằng mathhatan
           ghostDistance = manhattanDistance(newPos, ghost)
+        #Sử dụng min để tìm vị trí nhỏ nhất giữa ma và pacman
           newGhostDistance = min([newGhostDistance, ghostDistance])
-
+            
+        #Kiếm tra xem k/c tối thiểu giữa ma và pacman có nhỏ hơn 2 không (giữ k/c giữa ma và pacman)
         if newGhostDistance < 2:
           score -= 500
-
+        #Tính tổng score cuối cùng sau đó return score
         score = score + 1.0/newFoodDistance + newGhostDistance/maxlength
         
         return score
