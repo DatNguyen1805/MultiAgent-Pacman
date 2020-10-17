@@ -166,29 +166,45 @@ class MinimaxAgent(MultiAgentSearchAgent):
             Returns the total number of agents in the game
         """
         "*** YOUR CODE HERE ***"
+        # Viết hàm minimax
         def minimax(agentIndex, depth, gameState):
+            #Kiểm tra xem depth hiện tại có giống với giá trị đã đặt và trạng thái hiện tại là trạng thái thắng hay thua trong trò chơi
             if gameState.isLose() or gameState.isWin() or depth == self.depth:
+                #Nếu điều kiện trên thỏa mãn thì trạng thái hiện tại được thêm vào hàm đánh giá và giá trị kết quả được trả về
                 return self.evaluationFunction(gameState)
+            #Nếu agentIndex = 0 thì pacman vs Ghost >=1
             if agentIndex == 0:  
+                #Tìm giá trị lớn nhất trong số các minimax của điểm đánh giá trạng thái tiếp theo trong trạng thái hiện tại, sau đó lặp lại từng chuyển động xảy ra
                 return max(minimax(1, depth, gameState.generateSuccessor(agentIndex, newState))
                 for newState in gameState.getLegalActions(agentIndex))
             else: 
+                #Trong trường hợp ở trên không phải bóng ma cuối cùng thì nó vẫn lặp những chuyển động đã xảy ra,
+                #Để gửi tới số ma tiếp theo, lấy giá trị nhỏ nhất trong số các minimax của điểm đánh giá trạng thái tiếp theo trong trạng thái hiện tại
                 nextAgent = agentIndex + 1  
                 if gameState.getNumAgents() == nextAgent:
                     nextAgent = 0
                 if nextAgent == 0:
                    depth += 1
+                #Trả về giá trị min đó
                 return min(minimax(nextAgent, depth, gameState.generateSuccessor(agentIndex, newState)) 
                 for newState in gameState.getLegalActions(agentIndex))
 
+        #Đặt giá trị value cần tìm ban đầu là vô cùng
         value = float("-inf")
+        #Chuyển động hiện tại là WEST
         move = Directions.WEST
+        #Thực hiện vòng lặp cho mọi action
         for action in gameState.getLegalActions(0):
+            #Tính toán và lưu trữ giá trị minimax trong số các giá trị đánh giá ở trạng thái tiếp theo
             temp = minimax(1, 0, gameState.generateSuccessor(0, action))
+            #So sánh temp và value để tìm giá trị lớn nhất trong số các giá trị nhỏ nhất
             if temp > value or value == float("-inf"):
+                #nếu temp lớn thì thay thế giá trị value bằng temp
                 value = temp
+                #Lưu move để nhận giá trị tạm thời của chuyển động 
                 move = action
 
+        #trả về chuyển động của Pacman
         return move
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
@@ -201,15 +217,21 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
           Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
+        #Bài này giống bài trên nhưng điều kiện cắt nhánh alpha với beta để loại bỏ bớt số lần lặp
         def maxi(agentIndex, depth, game_state, a, b):
             value = float("-inf")
             for action in game_state.getLegalActions(agentIndex):
                 value = max(value, alphabetaprune(1, depth, game_state.generateSuccessor(agentIndex, action), a, b))
+                #Kiểm tra xem value có lớn hơn beta không
                 if value > b:
+                    #Nếu đúng thì không cần kiểm tra các nút con, trả về value
                     return value
+                #Đặt giá trị alpha là lớn nhất trong số các giá trị 
                 a = max(a, value)
+            #Trả về giá trị lớn nhất đó
             return value
 
+        #Hàm mini viết giống hàm maxi những chỗ cắt tỉa nhánh thì lấy trả nhỏ nhất trong số các giá trị
         def mini(agentIndex, depth, game_state, a, b): 
             value = float("inf")
 
@@ -226,6 +248,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 b = min(b, value)
             return value
 
+        #Hàm này thực hiện kiểm tra trạng thái ban đầu và trả về kết quả cho hai hàm mini, maxi
         def alphabetaprune(agentIndex, depth, game_state, a, b):
             if game_state.isLose() or game_state.isWin() or depth == self.depth:
                 return self.evaluationFunction(game_state)
@@ -235,6 +258,8 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
             else:  
                 return mini(agentIndex, depth, game_state, a, b)
 
+        #Cũng thực hiện tối đa hóa cho các nút gốc, thêm cắt tỉa alpha-beta
+        #Lấy giá trị lớn nhất trong các giá trị
         value = float("-inf")
         move = Directions.WEST
         a = float("-inf")
@@ -263,6 +288,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
           legal moves.
         """
         "*** YOUR CODE HERE ***"
+        #Bài này sử dụng hàm minimax nhưng sẽ cộng hết giá trị min value vào sau đó chia ra là thành expect
         def expectimax(agentIndex, depth, gameState):
             if gameState.isLose() or gameState.isWin() or depth == self.depth:
                 return self.evaluationFunction(gameState)
